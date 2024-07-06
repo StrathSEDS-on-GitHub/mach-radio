@@ -1,3 +1,6 @@
 [submodule "ext/RadioLib"]
 	path = ext/RadioLib
 	url = git@github.com:jgromes/RadioLib.git
+[submodule "ext/libgpiod"]
+	path = ext/libgpiod
+	url = git@github.com:brgl/libgpiod.git

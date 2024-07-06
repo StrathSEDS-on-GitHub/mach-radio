@@ -2,6 +2,8 @@
 #include <cstdio>
 #include <RadioLib.h>
 
+#include <gpiod.hpp>
+
 struct RockHal : public RadioLibHal
 {
   void init() override {}
