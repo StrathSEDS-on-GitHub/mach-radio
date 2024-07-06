@@ -1,0 +1,3 @@
+[submodule "ext/RadioLib"]
+	path = ext/RadioLib
+	url = git@github.com:jgromes/RadioLib.git
