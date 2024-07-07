@@ -2,7 +2,6 @@
 #include <cstdio>
 #include <RadioLib.h>
 
-#include <gpiod.hpp>
 
 struct RockHal : public RadioLibHal
 {
@@ -10,15 +9,15 @@ struct RockHal : public RadioLibHal
   void term() override {}
   void pinMode(u32 pin, u32 mode) override {}
   void digitalWrite(u32 pin, u32 value) override {}
-  uint32_t digitalRead(uint32_t pin) override {}
-  void attachInterrupt(uint32_t interruptNum, void (*interruptCb)(void), uint32_t mode) override {}
-  void detachInterrupt(uint32_t interruptNum) override {}
-  void delay(unsigned long ms) override {}
-  void delayMicroseconds(unsigned long us) override {}
+  uint32_t digitalRead(u32 pin) override {}
+  void attachInterrupt(u32 interruptNum, void (*interruptCb)(void), u32 mode) override {}
+  void detachInterrupt(u32 interruptNum) override {}
+  void delay(u64 ms) override {}
+  void delayMicroseconds(u64 us) override {}
   void yield() override {}
   unsigned long millis() override {}
   unsigned long micros() override {}
-  long pulseIn(uint32_t pin, uint32_t state, unsigned long timeout) override {}
+  long pulseIn(u32 pin, u32 state, u64 timeout) override {}
 };
 
 int main()
