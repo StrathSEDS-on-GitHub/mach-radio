@@ -4,3 +4,6 @@
 [submodule "ext/libgpiod"]
 	path = ext/libgpiod
 	url = git@github.com:brgl/libgpiod.git
+[submodule "ext/lg"]
+	path = ext/lg
+	url = git@github.com:joan2937/lg.git

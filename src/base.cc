@@ -1,6 +1,3 @@
-#ifndef BASE_HH
-#define BASE_HH
-
 #include <cstdint>
 #include <cstddef>
 
@@ -15,6 +12,4 @@ using u64   = uint64_t;
 using f32   = float;
 using f64   = double;
 using usize = size_t;
-
-#endif
 
