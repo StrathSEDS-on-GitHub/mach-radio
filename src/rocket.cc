@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <array>
+#include <thread>
+
+using asio::ip::tcp;
 
 namespace pin
 {
@@ -66,6 +69,19 @@ int main(int argc, char *const *argv)
   if (argc < 2) {
     fprintf(stderr, "need a streaming command\n");
     return 1;
+  }
+  bool staging = true;
+  {
+    constexpr u16 port = 1111;
+    asio::io_service io;
+    auto endpoint = tcp::endpoint(tcp::v4(), port);
+    tcp::acceptor acceptor(io_context, endpoint);
+    auto start_session = [&](tcp::socket sock) {
+      // do stuff
+    };
+    while (staging) {
+      std::thread(start_session, acceptor.accept());
+    }
   }
   int stream_fd = start_stream(argv);
   auto res = radio.begin(
