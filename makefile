@@ -30,16 +30,16 @@ FLAGS_LG = -I./ext/lg
 
 OBJECTS_ARM6 = bin/radiolib_arm6.o bin/lg_arm6.o
 OBJECTS_AARCH64 = bin/radiolib_aarch64.o bin/lg_aarch64.o
-FLAGS_MAIN = -I./ext/RadioLib/src -I./ext/lg -Wall -Wextra -Wpedantic
+FLAGS_MAIN = -I./ext/asio/asio/include -I./ext/RadioLib/src -I./ext/lg -Wall -Wextra -Wpedantic
 
 build:
 	make rocket
-	make groundstation
+	make ground
 
 rocket:
 	$(CPPC_AARCH64) $(FLAGS_COMMON_CPP) $(FLAGS_MAIN) $(OBJECTS_AARCH64) src/rocket.cc  -o bin/rocket
 
-groundstation:
+ground:
 	$(CPPC_ARM6) $(FLAGS_COMMON_CPP) $(FLAGS_MAIN) $(OBJECTS_ARM6) src/ground.cc  -o bin/ground
 
 radiolib:

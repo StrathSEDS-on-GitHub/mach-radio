@@ -1,4 +1,8 @@
 #include "hal.cc"
+#include <array>
+#include <asio.hpp>
+
+using asio::ip::udp;
 
 namespace pin
 {
@@ -31,8 +35,12 @@ auto radio = SX1280(new Module(
   pin::BUSY
 ));
 
-int main()
+int main(int argc, const char **argv)
 {
+  if (argc != 2) {
+    fprintf(stderr, "need an ip address\n");
+    return 1;
+  }
   auto res = radio.begin(
     // 2450.0, //  carrier freq (MHz)
     // 1625.0, //  bandwidth (kHz)
@@ -49,16 +57,20 @@ int main()
     return 1;
   }
 
-  u8 recv[255] = {0};
+  asio::io_service io;
+  auto addr = asio::ip::address::from_string(argv[1]);
+  constexpr u16 port = 1234;
+  udp::endpoint endpoint(addr, port);
+  udp::socket socket(io, endpoint.protocol());
+
+  std::array<u8, 255> rx_buf{0};
   while (true) {
-    res = radio.receive(recv, 255);
-    if (res == RADIOLIB_ERR_NONE) {
-      printf("got packet: %s\n", (char*)recv);
-    } else {
+    res = radio.receive(rx_buf.data(), rx_buf.size());
+    if (res != RADIOLIB_ERR_NONE) {
       fprintf(stderr, "packet get error: %d\n", res);
-    }
-    
-    hal->delay(100);
+      continue;
+    }   
+    auto buf = asio::buffer(rx_buf.data(), rx_buf.size());
+    socket.send(buf); 
   }
 }
-
