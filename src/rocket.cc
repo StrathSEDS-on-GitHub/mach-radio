@@ -1,7 +1,9 @@
 #include "hal.cc"
+#include "asio.hpp"
 #include <cerrno>
 #include <cstdlib>
 #include <unistd.h>
+#include <iostream>
 #include <array>
 #include <thread>
 
@@ -21,13 +23,13 @@ namespace pin
 }
 
 auto hal = new LinuxHal<
-  Spi{ 1, 0 },
-  GpioPin{ pin::RXEN,  2, 8  },
-  GpioPin{ pin::TXEN,  2, 11 },
-  GpioPin{ pin::NRESET,4, 18 },
-  GpioPin{ pin::BUSY,  4, 22 },
-  GpioPin{ pin::DIO1,  4, 21 },
-  GpioPin{ pin::NSS,   1, 10 }
+  Spi{ 0, 0 },
+  GpioPin{ pin::RXEN,  0, 3  },
+  GpioPin{ pin::TXEN,  0, 4  },
+  GpioPin{ pin::NRESET,0, 17 },
+  GpioPin{ pin::BUSY,  0, 27 },
+  GpioPin{ pin::DIO1,  0, 22 },
+  GpioPin{ pin::NSS,   0, 7  }
 >;
 
 auto radio = SX1280(new Module(
@@ -52,7 +54,7 @@ int start_stream(char *const *argv)
     if (dup2(write_fd, STDOUT_FILENO) == -1) {
       exit(errno);
     }
-    int res = execvp(*argv, argv+1);
+    int res = execvp(argv[8], argv + 8);
     exit(res);
   } else if (pid > 0) {
     close(write_fd);
@@ -66,33 +68,22 @@ int start_stream(char *const *argv)
 
 int main(int argc, char *const *argv)
 {
-  if (argc < 2) {
-    fprintf(stderr, "need a streaming command\n");
+  if (argc < 9) {
+    fprintf(stderr, "usage: rocket <carrier_freq> <bandwidth> <sf> <cr> <sync word> <power> <preamble> <command> [args...] fucking idiot.");
     return 1;
   }
-  bool staging = true;
-  {
-    constexpr u16 port = 1111;
-    asio::io_service io;
-    auto endpoint = tcp::endpoint(tcp::v4(), port);
-    tcp::acceptor acceptor(io_context, endpoint);
-    auto start_session = [&](tcp::socket sock) {
-      // do stuff
-    };
-    while (staging) {
-      std::thread(start_session, acceptor.accept());
-    }
-  }
   int stream_fd = start_stream(argv);
-  auto res = radio.begin(
-    // 2450.0, //  carrier freq (MHz)
-    // 1625.0, //  bandwidth (kHz)
-    // 7,      //  spreading factor #
-    // 5,      //  coding rate 
-    // 0x12,   //  sync word
-    // 2,      //  output power (dBm)
-    // 20      //  preamble length (symbols)
-  );
+
+  double carrier_freq = std::stod(argv[1]);
+  double bandwidth = std::stod(argv[2]);
+  int spreading_factor = std::stoi(argv[3]);
+  int coding_rate = std::stoi(argv[4]);
+  int sync_word = std::stoi(argv[5], nullptr, 16); // Parse as hex
+  int output_power = std::stoi(argv[6]);
+  int preamble_length = std::stoi(argv[7]);
+
+  auto res = radio.begin(carrier_freq, bandwidth, spreading_factor, coding_rate, sync_word, output_power, preamble_length);
+
   if (res == RADIOLIB_ERR_NONE) {
     printf("initialisation successful\n");
   } else {

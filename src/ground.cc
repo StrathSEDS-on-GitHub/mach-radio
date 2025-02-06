@@ -16,15 +16,14 @@ namespace pin
     NSS = 26
   };
 }
-
 auto hal = new LinuxHal<
-  Spi{ 0, 0 },
-  GpioPin{ pin::RXEN,  0, 3  },
-  GpioPin{ pin::TXEN,  0, 4  },
-  GpioPin{ pin::NRESET,0, 17 },
-  GpioPin{ pin::BUSY,  0, 27 },
-  GpioPin{ pin::DIO1,  0, 22 },
-  GpioPin{ pin::NSS,   0, 7  }
+  Spi{ 1, 0 },
+  GpioPin{ pin::RXEN,  2, 8  },
+  GpioPin{ pin::TXEN,  2, 11 },
+  GpioPin{ pin::NRESET,4, 18 },
+  GpioPin{ pin::BUSY,  4, 22 },
+  GpioPin{ pin::DIO1,  4, 21 },
+  GpioPin{ pin::NSS,   1, 10 }
 >;
 
 auto radio = SX1280(new Module(
@@ -37,31 +36,26 @@ auto radio = SX1280(new Module(
 
 int main(int argc, const char **argv)
 {
-  if (argc != 2) {
-    fprintf(stderr, "need an ip address\n");
+  if (argc != 9) {
+    fprintf(stderr, "usage: ground <carrier_freq> <bandwidth> <sf> <cr> <sync word> <power> <preamble> <ip addr>");
     return 1;
   }
-  auto res = radio.begin(
-    // 2450.0, //  carrier freq (MHz)
-    // 1625.0, //  bandwidth (kHz)
-    // 7,      //  spreading factor #
-    // 5,      //  coding rate 
-    // 0x12,   //  sync word
-    // 2,      //  output power (dBm)
-    // 20      //  preamble length (symbols)
-  );
+  double carrier_freq = std::stod(argv[2]);
+  double bandwidth = std::stod(argv[3]);
+  int spreading_factor = std::stoi(argv[4]);
+  int coding_rate = std::stoi(argv[5]);
+  int sync_word = std::stoi(argv[6], nullptr, 16); // Parse as hex
+  int output_power = std::stoi(argv[7]);
+  int preamble_length = std::stoi(argv[8]);
+
+  // Simulating the call to radio.begin
+  auto res = radio.begin(carrier_freq, bandwidth, spreading_factor, coding_rate, sync_word, output_power, preamble_length);
   if (res == RADIOLIB_ERR_NONE) {
     printf("initialisation successful\n");
   } else {
     fprintf(stderr, "initialisation error %d\n", res);
     return 1;
   }
-
-  asio::io_service io;
-  auto addr = asio::ip::address::from_string(argv[1]);
-  constexpr u16 port = 1234;
-  udp::endpoint endpoint(addr, port);
-  udp::socket socket(io, endpoint.protocol());
 
   std::array<u8, 255> rx_buf{0};
   while (true) {
@@ -71,6 +65,7 @@ int main(int argc, const char **argv)
       continue;
     }   
     auto buf = asio::buffer(rx_buf.data(), rx_buf.size());
-    socket.send(buf); 
+
+    printf("packet is : %s\n", std::string(static_cast<char*>(buf.data())).c_str());
   }
 }
