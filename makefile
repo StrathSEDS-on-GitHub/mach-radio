@@ -1,7 +1,7 @@
-CPPC_AARCH64 = ~/aarch64-linux-musl-cross/bin/aarch64-linux-musl-c++
-CC_AARCH64 = ~/aarch64-linux-musl-cross/bin/aarch64-linux-musl-cc
-CPPC_ARM6 = ~/armv6-linux-musleabihf-cross/bin/armv6-linux-musleabihf-c++
-CC_ARM6 = ~/armv6-linux-musleabihf-cross/bin/armv6-linux-musleabihf-cc
+CPPC_AARCH64 = /home/kyle/Downloads/aarch64-linux-musl-cross/bin/aarch64-linux-musl-c++
+CC_AARCH64 = /home/kyle/Downloads/aarch64-linux-musl-cross/bin/aarch64-linux-musl-cc
+CPPC_ARM6 = /home/kyle/Downloads/armv6-linux-musleabihf-cross/bin/armv6-linux-musleabihf-c++
+CC_ARM6 = /home/kyle/Downloads/armv6-linux-musleabihf-cross/bin/armv6-linux-musleabihf-cc
 
 FLAGS_COMMON_C = -static -static-libgcc 
 FLAGS_COMMON_CPP = $(FLAGS_COMMON_C) -std=c++23
@@ -37,10 +37,10 @@ build:
 	make ground
 
 rocket:
-	$(CPPC_AARCH64) $(FLAGS_COMMON_CPP) $(FLAGS_MAIN) $(OBJECTS_AARCH64) src/rocket.cc  -o bin/rocket
+	$(CPPC_ARM6) $(FLAGS_COMMON_CPP) $(FLAGS_MAIN) $(OBJECTS_ARM6) src/rocket.cc  -o bin/rocket
 
 ground:
-	$(CPPC_ARM6) $(FLAGS_COMMON_CPP) $(FLAGS_MAIN) $(OBJECTS_ARM6) src/ground.cc  -o bin/ground
+	$(CPPC_AARCH64) $(FLAGS_COMMON_CPP) $(FLAGS_MAIN) $(OBJECTS_AARCH64) src/ground.cc  -o bin/ground
 
 radiolib:
 	$(CPPC_AARCH64) $(FLAGS_COMMON_CPP) $(SRC_RADIOLIB) -DRADIOLIB_DEBUG_BASIC=1 -DSerial=stdout  -r -o bin/radiolib_aarch64.o 
