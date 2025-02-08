@@ -57,7 +57,7 @@ int main(int argc, const char **argv)
     return 1;
   }
 
-  std::array<u8, 255> rx_buf{0};
+  std::array<u8, 256> rx_buf{0};
   while (true) {
     res = radio.receive(rx_buf.data(), rx_buf.size());
     if (res != RADIOLIB_ERR_NONE) {
@@ -69,3 +69,4 @@ int main(int argc, const char **argv)
     printf("%s", std::string(static_cast<char*>(buf.data())).c_str());
   }
 }
+

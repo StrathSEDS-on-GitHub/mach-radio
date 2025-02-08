@@ -6,10 +6,7 @@ CC_ARM6 = /home/kyle/Downloads/armv6-linux-musleabihf-cross/bin/armv6-linux-musl
 FLAGS_COMMON_C = -static -static-libgcc 
 FLAGS_COMMON_CPP = $(FLAGS_COMMON_C) -std=c++23
 
-SRC_RADIOLIB = \
-	$(wildcard ext/RadioLib/src/*.cpp) \
-  $(wildcard ext/RadioLib/src/*/*.cpp) \
-  $(wildcard ext/RadioLib/src/*/*/*.cpp) 
+SRC_RADIOLIB = $(wildcard ext/RadioLib/src/*.cpp) $(wildcard ext/RadioLib/src/*/*.cpp) $(wildcard ext/RadioLib/src/*/*/*.cpp) 
 
 SRC_LG = \
   ext/lg/lgCtx.c \
