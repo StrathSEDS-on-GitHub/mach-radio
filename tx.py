@@ -1,4 +1,4 @@
-from hashlib import sha256, sha3_512, sha512
+from hashlib import sha3_512, sha512
 counter = 0
 
 while True:

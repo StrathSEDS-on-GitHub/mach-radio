@@ -59,7 +59,7 @@ while True:
     elapsed = time() - start_time
     if elapsed > 5:
         data_kbit = pkts_received * 255 * 8 / 1000
-        print(f"Throughput: {data_kbit/elapsed:.2f} kbit/s, Packet loss: {pkts_dropped/(pkts_received+pkts_dropped)*100:.2f}%")
+        print(f"Throughput: {data_kbit/elapsed:.2f} kbit/s, Packet loss: {pkts_dropped/(pkts_received+pkts_dropped)*100:.2f}%" + " " * 50)
         pkts_received = 0
         pkts_dropped = 0
         start_time = time()

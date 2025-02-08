@@ -66,6 +66,6 @@ int main(int argc, const char **argv)
     }   
     auto buf = asio::buffer(rx_buf.data(), rx_buf.size());
 
-    printf("packet is : %s\n", std::string(static_cast<char*>(buf.data())).c_str());
+    printf("%s", std::string(static_cast<char*>(buf.data())).c_str());
   }
 }
