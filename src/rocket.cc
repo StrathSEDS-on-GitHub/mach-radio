@@ -6,6 +6,8 @@
 #include <iostream>
 #include <array>
 #include <thread>
+#include <chrono>
+#include <thread>
 
 using asio::ip::tcp;
 
@@ -100,10 +102,12 @@ int main(int argc, char *const *argv)
       perror("Error reading from stream");
       continue;
     }
+    fprintf(stderr, "%s\n", tx_buf.data());
     res = radio.transmit(tx_buf.data(), tx_buf.size());
     if (res != RADIOLIB_ERR_NONE) {
       fprintf(stderr, "packet send error: %d\n", res);
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 }
 

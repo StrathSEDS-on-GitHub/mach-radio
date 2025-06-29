@@ -40,8 +40,8 @@ ground:
 	$(CPPC_AARCH64) $(FLAGS_COMMON_CPP) $(FLAGS_MAIN) $(OBJECTS_AARCH64) src/ground.cc  -o bin/ground
 
 radiolib:
-	$(CPPC_AARCH64) $(FLAGS_COMMON_CPP) $(SRC_RADIOLIB) -DRADIOLIB_DEBUG_BASIC=1 -DSerial=stdout  -r -o bin/radiolib_aarch64.o 
-	$(CPPC_ARM6) $(FLAGS_COMMON_CPP) $(SRC_RADIOLIB) -DRADIOLIB_DEBUG_BASIC=1 -DSerial=stdout  -r -o bin/radiolib_arm6.o 
+	$(CPPC_AARCH64) $(FLAGS_COMMON_CPP) $(SRC_RADIOLIB) -DSerial=stdout  -r -o bin/radiolib_aarch64.o 
+	$(CPPC_ARM6) $(FLAGS_COMMON_CPP) $(SRC_RADIOLIB)  -DSerial=stdout  -r -o bin/radiolib_arm6.o 
 
 lg:
 	$(CC_AARCH64) $(FLAGS_COMMON_C) $(FLAGS_LG) $(SRC_LG) -r -o bin/lg_aarch64.o
